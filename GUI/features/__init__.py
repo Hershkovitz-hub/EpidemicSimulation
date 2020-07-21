@@ -1,1 +1,2 @@
-from EpidemicSimulation.GUI.features.window import initiate_window
+from EpidemicSimulation.GUI.features.space import World
+from EpidemicSimulation.GUI.features.subject import Subject
