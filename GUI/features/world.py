@@ -2,7 +2,7 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 
-GRAY = (220, 220, 220)
+GRAY = (0, 0, 0)
 space = pymunk.Space()
 space.gravity = 0, -900
 b0 = space.static_body

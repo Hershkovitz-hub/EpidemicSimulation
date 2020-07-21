@@ -29,8 +29,8 @@ class Game:
         box_points = [
             (self.size_x - 10, 10),
             (self.size_x - 10, self.size_y - 10),
-            (box_x_boundary + 10, self.size_y - 10),
-            (box_x_boundary, 10),
+            (box_x_boundary + 5, self.size_y - 10),
+            (box_x_boundary + 5, 10),
         ]
         for i in range(4):  # Define bounderies and connect them
             seg = pymunk.Segment(
@@ -42,28 +42,22 @@ class Game:
     def add_bodies(self, bodies: list):
         """
         Adds bodies with shapes of circles to the simulation.
-        :param n_bodies: [Number of bodies ("people") to simulate.]
-        :type n_bodies: int
+        :param bodies: [list of dictionaries with fields {"position_x","position_y","state"} describing bodies (subjects) to simulate.]
+        :type bodies: list
         """
         space.gravity = 0, 0
         for i in range(len(bodies)):
-            body = pymunk.Body(mass=1, moment=10)
-            body.position = (
+            position = (
                 bodies[i].get("position_x"),
                 bodies[i].get("position_y"),
             )
-            impulse = randint(-50, 50), randint(-50, 50)
-            body.apply_impulse_at_local_point(impulse)
-            circle = pymunk.Circle(body, radius=10)
-            circle.elasticity = 0.999
-            circle.color = SIR[bodies[i].get("state").lower()].value
-            circle.friction = 0.5
-            space.add(body, circle)
+            color = SIR[bodies[i].get("state").lower()].value
+            subject = Subject(position=position, radius=10, color=color)
+            space.add(subject.body, subject.shape)
 
 
 if __name__ == "__main__":
     Game().create_box()
-    # bodies = [{"position_x": 700, "position_y": 650, "state": "susceptible"}]
     bodies = generate_bodies_example(40)
     Game().add_bodies(bodies)
     World().run()
