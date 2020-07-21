@@ -1,6 +1,11 @@
 import pygame
+import pymunk
+import pymunk.pygame_util
 
-pygame.init()
+GRAY = (220, 220, 220)
+space = pymunk.Space()
+space.gravity = 0, -900
+b0 = space.static_body
 
 
 class World:
@@ -18,19 +23,24 @@ class World:
         :param title: [World's window's title], defaults to "Epidemic Simulation"
         :type title: str, optional
         """
+        self.size_x = size_x
+        self.size_y = size_y
+        pygame.init()
         self.screen = pygame.display.set_mode((size_x, size_y))
         pygame.display.set_caption(title)
+        self.draw_options = pymunk.pygame_util.DrawOptions(self.screen)
+        self.running = True
 
     def run(self):
-        clock = pygame.time.Clock()
-        done = True
-        pygame.draw.circle(self.screen, (0, 0, 255), (150, 50), 15, 1)
-        while done:
-            clock.tick(60)
+        while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
+                    self.running = False
+            self.screen.fill(GRAY)
+            space.debug_draw(self.draw_options)
+            pygame.display.update()
+            space.step(0.01)
+        pygame.quit()
 
 
 if __name__ == "__main__":

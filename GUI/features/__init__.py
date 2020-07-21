@@ -1,2 +1,2 @@
-from EpidemicSimulation.GUI.features.space import World
-from EpidemicSimulation.GUI.features.subject import Subject
+from .world import World
+from .subject import Subject
