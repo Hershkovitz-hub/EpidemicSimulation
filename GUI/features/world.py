@@ -4,7 +4,7 @@ import pymunk.pygame_util
 
 GRAY = (0, 0, 0)
 space = pymunk.Space()
-space.gravity = 0, -900
+space.gravity = 0, 0
 b0 = space.static_body
 
 

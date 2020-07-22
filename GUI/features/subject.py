@@ -4,10 +4,11 @@ from random import randint
 
 class Subject:
     def __init__(self, position: tuple, radius: int, color: tuple):
-        self.body = pymunk.Body()
+        self.body = pymunk.Body(mass=1, moment=100)
         self.body.position = position
-        impulse = (randint(-50, 50), randint(-50, 50))
-        # self.body.apply_impulse_at_local_point(impulse)
+        impulse = (randint(-100, 100), randint(-100, 100))
+        # impulse = (10, 10)
+        self.body.apply_impulse_at_local_point(impulse)
         self.radius = radius
         self.color = color
 

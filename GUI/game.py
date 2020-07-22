@@ -4,7 +4,7 @@ import pymunk
 from random import randint
 from features import World, Subject
 from features.world import space
-from features.utils import SIR, generate_bodies_example
+from features.utils import SIR, Boxes, generate_bodies_example
 
 
 class Game:
@@ -21,23 +21,15 @@ class Game:
         self.size_y = size_y
         self.world = World(size_x=size_x, size_y=size_y)
 
-    def create_box(self):
+    def create_boxes(self):
         """
-        Create a box splitting the "world" in 2 - visualisation (right) and UI (left)
+        Uses the Boxes class to split the window into 3 segments: 
+        Visualisation (right)
+        UI (top left)
+        Parameters presentation (bottom left)
         """
-        box_x_boundary = self.size_x / 2
-        box_points = [
-            (self.size_x - 10, 10),
-            (self.size_x - 10, self.size_y - 10),
-            (box_x_boundary + 5, self.size_y - 10),
-            (box_x_boundary + 5, 10),
-        ]
-        for i in range(4):  # Define bounderies and connect them
-            seg = pymunk.Segment(
-                space.static_body, box_points[i], box_points[(i + 1) % 4], 2,
-            )
-            seg.elasticity = 0.999
-            space.add(seg)
+        boxes_generator = Boxes(self.size_x, self.size_y)
+        boxes_generator.run()
 
     def add_bodies(self, bodies: list):
         """
@@ -57,7 +49,8 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game().create_box()
-    bodies = generate_bodies_example(40)
+    Game().create_boxes()
+    bodies = generate_bodies_example(70)
+    print(bodies)
     Game().add_bodies(bodies)
     World().run()
