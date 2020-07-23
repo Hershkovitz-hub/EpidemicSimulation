@@ -4,6 +4,7 @@ import numpy as np
 
 states = ["SUSCEPTIBLE", "INFECTIOUS", "REMOVED"]
 
+print('hello')
 
 def generate_bodies_example(n_bodies: int) -> list:
     bodies = []
