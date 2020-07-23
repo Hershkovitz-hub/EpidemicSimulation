@@ -1,9 +1,8 @@
 import pymunk
-from features.world import space
 
 
 class Boxes:
-    def __init__(self, size_x: int, size_y: int):
+    def __init__(self, size_x: int, size_y: int, space=None):
         """
         Class to generate "boxes" (sub-windows) where the simulation takes place.
         It divides the main window in 3: 
@@ -15,6 +14,7 @@ class Boxes:
         :param size_y: [Main window's height]
         :type size_y: int
         """
+        self.space = space
         self.size_x = size_x
         self.size_y = size_y
         self.box_x_boundary = self.size_x / 2
@@ -43,10 +43,10 @@ class Boxes:
         :rtype: list
         """
         box_points = [
-            (10, self.box_y_boundary + 5),
+            (10, self.size_y - 140),
             (10, self.size_y - 10),
             (self.box_x_boundary - 5, self.size_y - 10),
-            (self.box_x_boundary - 5, self.box_y_boundary + 5),
+            (self.box_x_boundary - 5, self.size_y - 140),
         ]
         return box_points
 
@@ -59,8 +59,8 @@ class Boxes:
         """
         box_points = [
             (10, 10),
-            (10, self.box_y_boundary - 5),
-            (self.box_x_boundary - 5, self.box_y_boundary - 5),
+            (10, self.size_y - 150),
+            (self.box_x_boundary - 5, self.size_y - 150),
             (self.box_x_boundary - 5, 10),
         ]
         return box_points
@@ -74,16 +74,23 @@ class Boxes:
         """
         for i in range(len(box_boundaries)):
             seg = pymunk.Segment(
-                space.static_body,
+                self.space.static_body,
                 box_boundaries[i],
                 box_boundaries[(i + 1) % 4],
                 2,
             )
             seg.elasticity = 0.999
             seg.color = (255, 255, 255, 0)
-            space.add(seg)
+            self.space.add(seg)
 
-    def run(self):
+    @property
+    def ui_shape(self):
+        ui_box = self.set_ui_window_limits()
+        width = ui_box[2][0] - ui_box[0][0]
+        height = ui_box[1][1] - ui_box[0][1]
+        return width, height
+
+    def create(self):
         """
         Sets all windows' boundaries and add them to pymunk's space
         """

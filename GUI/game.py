@@ -1,10 +1,12 @@
 import pygame
 import random
 import pymunk
+import thorpy
 from random import randint
-from features import World, Subject
+from features import Subject
+from features.world import World
 from features.world import space
-from features.utils import SIR, Boxes, generate_bodies_example
+from features.utils import SIR, generate_bodies_example, Boxes
 
 
 class Game:
@@ -20,16 +22,6 @@ class Game:
         self.size_x = size_x
         self.size_y = size_y
         self.world = World(size_x=size_x, size_y=size_y)
-
-    def create_boxes(self):
-        """
-        Uses the Boxes class to split the window into 3 segments: 
-        Visualisation (right)
-        UI (top left)
-        Parameters presentation (bottom left)
-        """
-        boxes_generator = Boxes(self.size_x, self.size_y)
-        boxes_generator.run()
 
     def add_bodies(self, bodies: list):
         """
@@ -49,8 +41,7 @@ class Game:
 
 
 if __name__ == "__main__":
-    Game().create_boxes()
+    game = Game()
     bodies = generate_bodies_example(70)
-    print(bodies)
-    Game().add_bodies(bodies)
+    game.add_bodies(bodies)
     World().run()
