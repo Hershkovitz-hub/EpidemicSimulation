@@ -41,7 +41,7 @@ class UserInteface:
             [
                 "Probability of infection",
                 "Infection Radius",
-                "Number of carriers",
+                "Percentge of carriers",
             ],
         ):
             sliders.append(self.initiate_slider(value_range, title))

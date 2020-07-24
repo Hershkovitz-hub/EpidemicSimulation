@@ -2,8 +2,8 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 import thorpy
-from .utils import Boxes
-from . import UserInteface, ParametersPresenter
+from epidemic_simulation.GUI.features.utils import Boxes, SimulationIO
+from epidemic_simulation.GUI.features import UserInteface, ParametersPresentor
 
 BACKGROUND = (0, 0, 0)
 space = pymunk.Space()
@@ -26,9 +26,12 @@ class World:
         :param title: [World's window's title], defaults to "Epidemic Simulation"
         :type title: str, optional
         """
-        self.r = 0
+        self.infection_p = 0
         self.infection_radius = 0
         self.carriers = 0
+        self.infectious = 0
+        self.susceptible = 0
+        self.removed = 0
         self.size_x = size_x
         self.size_y = size_y
         pygame.init()
@@ -41,6 +44,8 @@ class World:
         self.screen.fill(BACKGROUND)
         self.running = True
         self.set_ui()
+        self.background.add_reaction(self.reaction)
+        self.menu = thorpy.Menu(self.background)
 
     def set_ui(self):
         """
@@ -64,52 +69,49 @@ class World:
             reac_func=self.sliders_reaction,
             event_args={"id": thorpy.constants.EVENT_SLIDE},
             params={
-                "r": self.elements[0],
+                "infection_p": self.elements[0],
                 "infection_radius": self.elements[1],
                 "carriers": self.elements[2],
             },
         )
 
     def run(self):
-        self.background.add_reaction(self.reaction)
-        self.menu = thorpy.Menu(self.background)
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    break
-                # elif event.type == pygame.USEREVENT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                break
+            self.menu.react(event)
+        x, y = self.screen.get_width(), self.screen.get_height()
+        self.size_x, self.size_y = pygame.display.get_surface().get_size()
+        Boxes(self.size_x, self.size_y, space=space).create()
+        self.screen.fill(
+            BACKGROUND, rect=(x / 2, 0, x, y),
+        )
+        self.screen.fill(
+            BACKGROUND, rect=(0, 150, x, y),
+        )
+        ParametersPresentor(
+            self.screen,
+            self.size_x,
+            self.size_y,
+            self.infection_p,
+            self.infection_radius,
+            self.carriers,
+            susceptible=self.susceptible,
+            infectious=self.infectious,
+            removed=self.removed,
+        ).place_texts()
+        space.debug_draw(self.draw_options)
+        pygame.display.update()
+        space.step(0.01)
 
-                self.menu.react(event)
-            x, y = self.screen.get_width(), self.screen.get_height()
-            self.size_x, self.size_y = pygame.display.get_surface().get_size()
-            Boxes(self.size_x, self.size_y, space=space).create()
-            self.screen.fill(
-                BACKGROUND, rect=(x / 2, 0, x, y),
-            )
-            self.screen.fill(
-                BACKGROUND, rect=(0, 150, x, y),
-            )
-            ParametersPresenter(
-                self.screen,
-                self.size_x,
-                self.size_y,
-                self.r,
-                self.infection_radius,
-                self.carriers,
-            ).place_texts()
-            space.debug_draw(self.draw_options)
-            pygame.display.update()
-            space.step(0.01)
-        pygame.quit()
-
-    def sliders_reaction(self, event, r, infection_radius, carriers):
-        if event.el == r:
-            self.r = r.get_value()
+    def sliders_reaction(self, event, infection_p, infection_radius, carriers):
+        if event.el == infection_p:
+            self.infection_p = infection_p.get_value()
         if event.el == infection_radius:
             self.infection_radius = infection_radius.get_value()
         if event.el == carriers:
-            self.carriers = carriers.get_value()
+            self.carriers = carriers.get_value() / 100
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import pygame
 from .utils import Boxes
 
 
-class ParametersPresenter:
+class ParametersPresentor:
     def __init__(
         self,
         screen,
@@ -39,7 +39,7 @@ class ParametersPresenter:
             [
                 "Probability of infection",
                 "Infection radius",
-                "Number of initial carriers",
+                "Percentage of initial carriers",
                 "R",
                 "Susceptible",
                 "Infectious",

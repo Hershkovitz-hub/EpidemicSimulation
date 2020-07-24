@@ -11,6 +11,7 @@ class Subject:
         self.body.apply_impulse_at_local_point(impulse)
         self.radius = radius
         self.color = color
+        self.shape = self.set_shape()
 
     def set_shape(self):
         shape = pymunk.Circle(self.body, self.radius)
@@ -19,7 +20,3 @@ class Subject:
         shape.friction = 0
         shape.color = self.color
         return shape
-
-    @property
-    def shape(self):
-        return self.set_shape()

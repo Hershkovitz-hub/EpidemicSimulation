@@ -1,8 +1,8 @@
 __version__ = "0.1.0"
 __title__ = "Epidemic Simulation"
-__description__ = "Parse Stuff With Ease"  ## CHANGE
+__description__ = "Dynamic simulation of virus's spread throughout a population"
 __url__ = "https://github.com/Hershkovitz-hub/EpidemicSimulation"
 __doc__ = __description__ + " <" + __url__ + ">"
-__author__ = "Will be changed"
-__email__ = "Will be changed@gmail.com"
+__author__ = "Gal Hershkovitz, Noga Yair, Tal Camchy"
+__email__ = "Hershkovitz1@mail.tau.ac.il, talcamchy@gmail.com, nogayair@mail.tau.ac.il"
 __license__ = "MIT"

@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 NAME = "epidemic_simulation"
 PACKAGES = find_packages(where="src")
 META_PATH = os.path.join("src", "epidemic_simulation", "__init__.py")
-KEYWORDS = ["class", "attribute", "boilerplate"]  # CHANGE
+KEYWORDS = ["simulation", "pygame", "pymunk","epidemic"]  # CHANGE
 CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -27,6 +27,8 @@ CLASSIFIERS = [
 
 INSTALL_REQUIRES = [  # CHANGE
     "pygame",
+    "pymunk",
+    "thorpy",
     "pep517",
     "twine",
     "pytest",
