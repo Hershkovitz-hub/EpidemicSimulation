@@ -7,12 +7,22 @@ from epidemic_simulation.GUI.features.utils.sliders import Sliders
 
 class UserInterface:
     def __init__(self, world: World, ui_limits: list):
+        """
+        A class to create and update all UI-related components of the simulation
+        :param world: [The simulation World instance, conatining all window-related properties]
+        :type world: World
+        :param ui_limits: [List of 4 tuples, indicating UI part of the window]
+        :type ui_limits: list
+        """
         self.world = world
         self.screen = self.world.screen
         self.calculate_window_dimension(ui_limits)
         self.set_initial_parameters()
 
     def set_initial_parameters(self):
+        """
+        Initiate the "starting point" of the world-related parameters
+        """
         self.parameters = {}
         for parameter in Sliders:
             self.parameters[parameter.name] = parameter.value["initial_value"]
@@ -29,6 +39,8 @@ class UserInterface:
     def initiate_ui_box(self, elements: list):
         """
         Initiates a thorpy box where sliders and buttons take place
+        :param elements: [List of all thorpy elements that will be integrated into the UI box]
+        :type elements: list
         """
         self.ui_box = thorpy.Box(
             size=(self.width, self.height), elements=elements
@@ -79,31 +91,38 @@ class UserInterface:
 
     @property
     def reaction(self):
+        """
+        Sets the reaction to slider-related user event
+        :return: [The value of the slider after user's choice]
+        :rtype: [int or float]
+        """
         return thorpy.Reaction(
             reacts_to=pygame.USEREVENT,
             reac_func=self.sliders_reaction,
             event_args={"id": thorpy.constants.EVENT_SLIDE},
             params={
-                "people_n": self.elements[0],
-                "infection_p": self.elements[1],
-                "infection_r": self.elements[2],
-                "carriers": self.elements[3],
-                "duration": self.elements[4],
+                "people_n": self.ui_box.get_elements()[0],
+                "infection_p": self.ui_box.get_elements()[1],
+                "infection_r": self.ui_box.get_elements()[2],
+                "carriers": self.ui_box.get_elements()[3],
+                "duration": self.ui_box.get_elements()[4],
             },
         )
 
     def sliders_reaction(
         self, event, people_n, infection_p, infection_r, carriers, duration
     ):
-        print(type(people_n))
+        """
+        Adds the value to it's designated target, by comparing the user event to those added to UI box.
+        """
         if event.el == people_n:
             self.parameters["subjects_n"] = people_n.get_value()
         if event.el == infection_p:
             self.parameters["infection_p"] = infection_p.get_value()
         if event.el == infection_r:
-            self.parameters["infection_r"] = infection_radius.get_value()
+            self.parameters["infection_r"] = infection_r.get_value()
         if event.el == carriers:
-            self.parameters["initial_carriers_p"] = carriers.get_value() / 100
+            self.parameters["initial_carriers_p"] = carriers.get_value()
         if event.el == duration:
             self.parameters["sickness_duration"] = duration.get_value()
 

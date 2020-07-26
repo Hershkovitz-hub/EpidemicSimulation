@@ -2,6 +2,10 @@ from enum import Enum
 
 
 class Sliders(Enum):
+    """
+    An Enum to more efficiently call the different sliders that are part of the GUI of the simulation
+    """
+
     subjects_n = {
         "title": "Number of People to simulate",
         "values_range": (10, 1000),
@@ -30,6 +34,6 @@ class Sliders(Enum):
         "title": "Sickness Duration",
         "values_range": (1, 1000),
         "initial_value": 10,
-        "type": float,
+        "type": int,
     }
 

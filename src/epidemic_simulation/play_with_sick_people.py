@@ -2,20 +2,18 @@ import pygame
 import pymunk
 from epidemic_simulation.GUI.features import World, BACKGROUND_COLOR
 from epidemic_simulation.GUI.features.utils.screen_divider import ScreenDivider
-from epidemic_simulation.GUI.features import UserInterface
+from epidemic_simulation.GUI.features import UserInterface, ParametersPresenter
 from epidemic_simulation.GUI.features.utils.sliders import Sliders
 
 
 class Game:
     def __init__(self):
+        """
+        This is the main Class that governs all simulation-related calsses and method in order to initiate and manage an ongoing simulation
+        """
         self.world = World()
         self.running = True
-        self.set_initial_parameters()
-
-    def set_initial_parameters(self):
         self.parameters = {}
-        for parameter in Sliders:
-            self.parameters[parameter.name] = parameter.value["initial_value"]
 
     def update_game_windows(self):
         """
@@ -27,6 +25,10 @@ class Game:
             self.world, screen_divider.selection_comp
         )
         self.user_interface.initiate_ui_selections()
+        self.parameters_presenter = ParametersPresenter(
+            self.world, screen_divider.presentation_comp,
+        )
+        self.parameters_presenter.place_texts(self.user_interface.parameters)
 
 
 if __name__ == "__main__":
@@ -42,6 +44,10 @@ if __name__ == "__main__":
                 game.world.resize_window(new_width, new_height)
                 game.update_game_windows()
             game.user_interface.menu.react(event)
+            game.parameters_presenter.place_texts(
+                game.user_interface.parameters
+            )
+        game.parameters = game.user_interface.parameters
         game.world.space.debug_draw(game.world.draw_options)
         pygame.display.update()
         game.world.space.step(0.001)
