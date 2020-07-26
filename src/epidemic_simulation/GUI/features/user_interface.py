@@ -37,11 +37,12 @@ class UserInteface:
     def sliders(self):
         sliders = []
         for value_range, title in zip(
-            [(0, 1), (0, 20), (0, 100)],
+            [(0, 1), (0, 20), (0, 100), (100, 1000)],
             [
                 "Probability of infection",
                 "Infection Radius",
                 "Percentge of carriers",
+                "Sickness duration",
             ],
         ):
             sliders.append(self.initiate_slider(value_range, title))

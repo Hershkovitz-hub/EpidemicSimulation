@@ -28,6 +28,7 @@ class World:
         """
         self.infection_p = 0
         self.infection_radius = 0
+        self.sickness_duration = 0
         self.carriers = 0
         self.infectious = 0
         self.susceptible = 0
@@ -72,6 +73,7 @@ class World:
                 "infection_p": self.elements[0],
                 "infection_radius": self.elements[1],
                 "carriers": self.elements[2],
+                "duration": self.elements[3],
             },
         )
 
@@ -105,13 +107,17 @@ class World:
         pygame.display.update()
         space.step(0.01)
 
-    def sliders_reaction(self, event, infection_p, infection_radius, carriers):
+    def sliders_reaction(
+        self, event, infection_p, infection_radius, carriers, duration
+    ):
         if event.el == infection_p:
             self.infection_p = infection_p.get_value()
         if event.el == infection_radius:
             self.infection_radius = infection_radius.get_value()
         if event.el == carriers:
             self.carriers = carriers.get_value() / 100
+        if event.el == duration:
+            self.sickness_duration = duration.get_value()
 
 
 if __name__ == "__main__":

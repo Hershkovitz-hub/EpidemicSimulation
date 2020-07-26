@@ -3,7 +3,10 @@ from random import randint
 
 
 class Subject:
-    def __init__(self, position: tuple, radius: int, color: tuple):
+    def __init__(
+        self, position: tuple, radius: int, color: tuple, properties: dict
+    ):
+        self.properties = properties
         self.body = pymunk.Body(mass=1, moment=pymunk.inf)
         self.body.position = position
         impulse = (randint(-1000, 1000), randint(-1000, 1000))
