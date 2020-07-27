@@ -69,7 +69,7 @@ class UserInterface:
         :type initial_value: float
         """
         return thorpy.SliderX(
-            length=100,
+            length=300,
             limvals=values_range,
             text=title,
             initial_value=initial_value,

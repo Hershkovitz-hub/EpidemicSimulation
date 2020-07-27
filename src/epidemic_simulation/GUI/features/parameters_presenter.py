@@ -27,7 +27,39 @@ class ParametersPresenter:
             BACKGROUND_COLOR, rect=(0, 0.55 * self.corners[1][1], x, y),
         )
 
-    def place_texts(self, parameters: dict):
+    def sort_subjects_into_presentation(self, subjects: list) -> dict:
+        """
+        Generate a presentable dictionary by counting subjects' states and divi
+        :param subjects: [List of dictionaries discribing simulations' subjects]
+        :type subjects: list
+        :return: [Dictionary describing all subjects divided into "susceptibles","infectious" and "removed"]
+        :rtype: dict
+        """
+        subjects_dict = {"Susceptibles": 0, "Infectious": 0, "Removed": 0}
+        subjects_dict["Susceptibles"] = len(
+            [
+                subject
+                for subject in subjects
+                if subject.get("state").lower() == "susceptible"
+            ]
+        )
+        subjects_dict["Infectious"] = len(
+            [
+                subject
+                for subject in subjects
+                if subject.get("state").lower() == "infectious"
+            ]
+        )
+        subjects_dict["Removed"] = len(
+            [
+                subject
+                for subject in subjects
+                if subject.get("state").lower() == "removed"
+            ]
+        )
+        return subjects_dict
+
+    def place_texts(self, parameters: dict, subjects: list):
         """
         Place the parameters present in given dictionary at the top left part of the designated window
         :param parameters: [Dictionary with parameters' title as keys and their values al values]
@@ -35,6 +67,9 @@ class ParametersPresenter:
         """
         self.restart_presentation()
         y_coordinate = 0.55 * self.corners[1][1]
+        subjects_dict = self.sort_subjects_into_presentation(subjects)
+        for key, value in subjects_dict.items():
+            parameters[key] = value
         for title, value in parameters.items():
             self.add_text(
                 title,

@@ -18,7 +18,7 @@ class SimulationManager:
         """
         self.subjects = subjects
         self.sort_subjects_into_groups()
-        self.infection_r = parameters.get("infection_r") * 50
+        self.infection_r = parameters.get("infection_r")
         self.infection_p = parameters.get("infection_p")
         self.subjects_to_change = []
         self.sickness_duration = parameters.get("sickness_duration")

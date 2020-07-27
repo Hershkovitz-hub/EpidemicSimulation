@@ -33,7 +33,9 @@ class Game:
         self.parameters_presenter = ParametersPresenter(
             self.world, self.screen_divider.presentation_comp,
         )
-        self.parameters_presenter.place_texts(self.user_interface.parameters)
+        self.parameters_presenter.place_texts(
+            self.user_interface.parameters, game.subjects
+        )
 
 
 if __name__ == "__main__":
@@ -59,16 +61,17 @@ if __name__ == "__main__":
                 subjects_manager.clear_all_subjects()
                 subjects_manager.restart_visualisation()
             game.user_interface.menu.react(event)
-            game.parameters_presenter.place_texts(
-                game.user_interface.parameters
-            )
+        game.parameters_presenter.place_texts(
+            game.user_interface.parameters, game.subjects
+        )
         subjects_manager.calculate_window_dimension(
             game.screen_divider.visual_comp
         )
         subjects_manager.restart_visualisation()
         game.parameters = game.user_interface.parameters
+
         subjects_manager.update_subjects(game.parameters)
-        if not pygame.time.get_ticks() % 1000:
+        if not pygame.time.get_ticks() % 600:
             subjects_manager.integrate_with_simulation()
         game.subjects = subjects_manager.subjects
         game.world.space.debug_draw(game.world.draw_options)
