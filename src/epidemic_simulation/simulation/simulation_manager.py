@@ -1,8 +1,4 @@
 import random
-
-# from epidemic_simulation.GUI.features.utils import SIR
-
-
 class SimulationManager:
     def __init__(self, subjects: list, parameters: dict):
         """
@@ -22,7 +18,7 @@ class SimulationManager:
         self.infection_p = parameters.get("infection_p")
         self.subjects_to_change = []
         self.sickness_duration = parameters.get("sickness_duration")
-
+        
     def sort_subjects_into_groups(self):
         self.infectious = [
             subject
@@ -51,7 +47,11 @@ class SimulationManager:
         :type infected_body: dict
         """
         infectious_x, infectious_y = susceptible_subject.get("position")
-        susceptible_x, susceptible_y = infected_subject.get("position")
+        susceptible_x, susceptible_y = infected_subject.get("position")      
+        if infectious_x==susceptible_x and infectious_y==susceptible_y:
+            raise ValueError('Both bodies are in the same position')
+        if self.infection_r<=0:
+            raise ValueError('The Radius must be grater than 0')
         x_distance = (infectious_x - susceptible_x) ** 2
         y_distance = (infectious_y - susceptible_y) ** 2
         distance = (y_distance + x_distance) ** 0.5
@@ -61,6 +61,8 @@ class SimulationManager:
             return False
 
     def is_infected(self) -> bool:
+        if self.infection_prob<0 or self.infection_prob>1:
+            raise ValueError('Infection probability must be a number between o and 1')
         return random.choices(
             [False, True],
             weights=[1 - self.infection_p, self.infection_p],
