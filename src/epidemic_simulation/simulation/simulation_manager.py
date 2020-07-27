@@ -1,16 +1,6 @@
 import random
-#from epidemic_simulation.GUI.features.utils import SIR
-
-
 class SimulationManager:
-    def __init__(
-        self,
-        #space,
-        bodies: list,
-        infection_r: float,
-        infection_prob: float,
-        sickness_duration: int,
-    ):
+    def __init__(self, subjects: list, parameters: dict):
         """
         A class to manage all simulation and calculation regarding the epidemic.
         :param bodies: [description]
@@ -22,19 +12,33 @@ class SimulationManager:
         :param day: [description]
         :type day: int
         """
-        #self.space = space
-        self.bodies = bodies
-        self.infection_r = infection_r
-        self.infection_prob = infection_prob
-        self.bodies_to_change = []
-        self.sickness_duration = sickness_duration
+        self.subjects = subjects
+        self.sort_subjects_into_groups()
+        self.infection_r = parameters.get("infection_r") * 50
+        self.infection_p = parameters.get("infection_p")
+        self.subjects_to_change = []
+        self.sickness_duration = parameters.get("sickness_duration")
+        
+    def sort_subjects_into_groups(self):
+        self.infectious = [
+            subject
+            for subject in self.subjects
+            if subject.get("state").lower() == "infectious"
+        ]
+        self.susceptibles = [
+            subject
+            for subject in self.subjects
+            if subject.get("state").lower() == "susceptible"
+        ]
+        self.removed = [
+            subject
+            for subject in self.subjects
+            if subject.get("state").lower() == "removed"
+        ]
 
-    def extract_position(self, body):
-        x_coord = body["position_x"]
-        y_coord = body["position_y"]
-        return x_coord, y_coord
-
-    def is_inside(self, susceptible_body, infected_body):
+    def is_inside(
+        self, susceptible_subject: dict, infected_subject: dict
+    ) -> bool:
         """
         Method to determine whether susceptible subjects are in close proximity to infectious ones
         :param suscptible_body: [description]
@@ -42,69 +46,58 @@ class SimulationManager:
         :param infected_body: [description]
         :type infected_body: dict
         """
-        infectious_x, infectious_y = susceptible_body.position
-        susceptible_x, susceptible_y = infected_body.position
+        infectious_x, infectious_y = susceptible_subject.get("position")
+        susceptible_x, susceptible_y = infected_subject.get("position")      
         if infectious_x==susceptible_x and infectious_y==susceptible_y:
             raise ValueError('Both bodies are in the same position')
         if self.infection_r<=0:
             raise ValueError('The Radius must be grater than 0')
-        if (infectious_x - susceptible_x) * (infectious_x - susceptible_x) + (
-            infectious_y - susceptible_y
-        ) * (infectious_y - susceptible_y) <= self.infection_r ** 2:
+        x_distance = (infectious_x - susceptible_x) ** 2
+        y_distance = (infectious_y - susceptible_y) ** 2
+        distance = (y_distance + x_distance) ** 0.5
+        if distance <= self.infection_r ** 2:
             return True
         else:
             return False
 
-    def is_infected(self):
+    def is_infected(self) -> bool:
         if self.infection_prob<0 or self.infection_prob>1:
             raise ValueError('Infection probability must be a number between o and 1')
         return random.choices(
             [False, True],
-            weights=[1 - self.infection_prob, self.infection_prob],
+            weights=[1 - self.infection_p, self.infection_p],
             k=1,
         )[0]
 
-    def calculate_bodies_to_change(self):
-        self.suscpetible_bodies = self.find_bodies("susceptible")
-        self.infected_bodies = self.find_bodies("infectious")
-        for susceptible_body in self.suscpetible_bodies:
-            # print(susceptible_body)
-            for infected_body in self.infected_bodies:
-                proximate = self.is_inside(susceptible_body, infected_body)
-                # print(proximate)
+    def calculate_subjects_to_change(self):
+        for susceptible_subject in self.susceptibles:
+            for infected_subject in self.infectious:
+                proximate = self.is_inside(
+                    susceptible_subject, infected_subject
+                )
                 if proximate:
                     to_infect = self.is_infected()
                     if to_infect:
-                        self.bodies_to_change.append(susceptible_body)
+                        self.subjects_to_change.append(susceptible_subject)
                         break
 
     def infect_susceptibles(self):
-        for susceptible_body in self.bodies_to_change:
-            for body in self.bodies:
-                if body is susceptible_body:
-                    body["state"] = "INFECTIOUS"
+        for susceptible_subject in self.subjects_to_change:
+            for subject in self.subjects:
+                if subject is susceptible_subject:
+                    subject["state"] = "INFECTIOUS"
 
     def remove_infected(self):
-        for infected_body in self.infected_bodies:
-            for body in self.bodies:
-                if body == infected_body:
-                    body["counter"] += 1
-                    if body["counter"] > self.sickness_duration:
-                        body["state"] = "REMOVED"
+        for infected_subject in self.infectious:
+            for subject in self.subjects:
+                if subject == infected_subject:
+                    subject["counter"] += 1
+                    if subject["counter"] > self.sickness_duration:
+                        subject["state"] = "REMOVED"
 
-    def find_bodies(self, target: str):
-        target_bodies = []
-        for body in self.space._get_bodies():
-            body_x, body_y = body.position
-            for shape in body.shapes:
-                if shape.color == SIR[target.lower()].value:
-                    target_bodies.append(body)
-        return target_bodies
-        # shape = body.shapes[0]
-        # print(shape)
-    
-    def update_bodies(self):
-        self.calculate_bodies_to_change()
+    def update_subjects(self):
+        self.calculate_subjects_to_change()
         self.remove_infected()
         self.infect_susceptibles()
+        return self.subjects
 
