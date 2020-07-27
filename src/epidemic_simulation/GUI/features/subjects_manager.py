@@ -3,11 +3,15 @@ import pygame
 from pymunk.vec2d import Vec2d
 from epidemic_simulation.GUI.features import World, BACKGROUND_COLOR
 from epidemic_simulation.GUI.features.utils.sir_to_color import SIR
+
+from epidemic_simulation.simulation import SimulationManager
 from random import randint, choices
 
 
 class SubjectManager:
-    def __init__(self, world: World, parameters: dict):
+    def __init__(
+        self, world: World, parameters: dict, visualisation_limits: list
+    ):
         """
         A class to create, update and manage all subjects-related matters of the simulation
         :param world: [Simulation World instance, conatining all window-related properties]
@@ -16,10 +20,19 @@ class SubjectManager:
         :type parameters: dict
         """
         self.world = world
-        self.width, self.height = self.world.screen.get_size()
+        self.calculate_window_dimension(visualisation_limits)
         self.parameters = parameters
         self.space = self.world.space
         self.extract_initial_parameters()
+
+    def calculate_window_dimension(self, visualisation_limits: list):
+        """
+        Calculates the area designated for UI from a list of 4 tuples indicating it's corners' coordinates
+        :param ui_limits: [List of 4 tuples]
+        :type ui_limits: list
+        """
+        self.height = visualisation_limits[1][1]
+        self.width = visualisation_limits[0][0]
 
     def extract_initial_parameters(self):
         """
@@ -33,7 +46,8 @@ class SubjectManager:
         "Cleans" visualisation-designated area before updating subjects
         """
         self.world.screen.fill(
-            BACKGROUND_COLOR, rect=(self.width / 2, 0, self.width, self.height)
+            BACKGROUND_COLOR,
+            rect=(self.width / 2, 0, self.width, self.height),
         )
 
     def initiate_subjects(self):
@@ -43,8 +57,8 @@ class SubjectManager:
         self.subjects = []
         for subject in range(self.subjects_n):
             position = Vec2d(
-                randint(self.width / 2 + 20, self.width - 20),
-                randint(20, self.height - 20),
+                randint(int((self.width / 2) * 1.2), int(self.width - 20)),
+                randint(20, int(self.height - 20)),
             )
             counter = 0
             is_carrier = choices(
@@ -58,6 +72,9 @@ class SubjectManager:
             }
             if is_carrier:
                 subject_dict["state"] = "INFECTIOUS"
+                subject_dict["counter"] = randint(
+                    0, self.parameters.get("sickness_duration")
+                )
             subject_dict["body"] = self.add_body_to_subject(subject_dict)
             subject_dict["shape"] = self.add_shape_to_body(subject_dict)
             self.subjects.append(subject_dict)
@@ -127,3 +144,11 @@ class SubjectManager:
             for subject_dict in self.subjects:
                 if body == subject_dict.get("body"):
                     subject_dict["position"] = body._get_position()
+
+    def integrate_with_simulation(self):
+        simulation_io = SimulationManager(self.subjects, self.parameters)
+        self.subjects = simulation_io.update_subjects()
+        self.clear_all_subjects()
+        for subject_dict in self.subjects:
+            subject_dict["shape"] = self.add_shape_to_body(subject_dict)
+        self.add_subjects_to_space()

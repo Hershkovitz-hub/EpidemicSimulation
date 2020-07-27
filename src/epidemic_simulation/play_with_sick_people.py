@@ -24,14 +24,14 @@ class Game:
         """
         Initializing or Resets all windows and UI components (changes upon window size change)
         """
-        screen_divider = ScreenDivider(self.world)
-        screen_divider.create_components()
+        self.screen_divider = ScreenDivider(self.world)
+        self.screen_divider.create_components()
         self.user_interface = UserInterface(
-            self.world, screen_divider.selection_comp
+            self.world, self.screen_divider.selection_comp
         )
         self.user_interface.initiate_ui_selections()
         self.parameters_presenter = ParametersPresenter(
-            self.world, screen_divider.presentation_comp,
+            self.world, self.screen_divider.presentation_comp,
         )
         self.parameters_presenter.place_texts(self.user_interface.parameters)
 
@@ -40,7 +40,9 @@ if __name__ == "__main__":
     game = Game()
     game.update_game_windows()
     subjects_manager = SubjectManager(
-        game.world, game.user_interface.parameters
+        game.world,
+        game.user_interface.parameters,
+        game.screen_divider.visual_comp,
     )
     subjects_manager.initiate_subjects()
     game.subjects = subjects_manager.subjects
@@ -54,13 +56,20 @@ if __name__ == "__main__":
                 new_width, new_height = event.size
                 game.world.resize_window(new_width, new_height)
                 game.update_game_windows()
+                subjects_manager.clear_all_subjects()
+                subjects_manager.restart_visualisation()
             game.user_interface.menu.react(event)
             game.parameters_presenter.place_texts(
                 game.user_interface.parameters
             )
+        subjects_manager.calculate_window_dimension(
+            game.screen_divider.visual_comp
+        )
         subjects_manager.restart_visualisation()
         game.parameters = game.user_interface.parameters
         subjects_manager.update_subjects(game.parameters)
+        if not pygame.time.get_ticks() % 1000:
+            subjects_manager.integrate_with_simulation()
         game.subjects = subjects_manager.subjects
         game.world.space.debug_draw(game.world.draw_options)
         clock.tick()
