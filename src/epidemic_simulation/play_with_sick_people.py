@@ -2,7 +2,11 @@ import pygame
 import pymunk
 from epidemic_simulation.GUI.features import World, BACKGROUND_COLOR
 from epidemic_simulation.GUI.features.utils.screen_divider import ScreenDivider
-from epidemic_simulation.GUI.features import UserInterface, ParametersPresenter
+from epidemic_simulation.GUI.features import (
+    UserInterface,
+    ParametersPresenter,
+    SubjectManager,
+)
 from epidemic_simulation.GUI.features.utils.sliders import Sliders
 
 
@@ -34,6 +38,11 @@ class Game:
 if __name__ == "__main__":
     game = Game()
     game.update_game_windows()
+    subjects_manager = SubjectManager(
+        game.world, game.user_interface.parameters
+    )
+    subjects_manager.initiate_subjects()
+    clock = pygame.time.Clock()
     while game.running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -47,8 +56,11 @@ if __name__ == "__main__":
             game.parameters_presenter.place_texts(
                 game.user_interface.parameters
             )
+        subjects_manager.restart_visualisation()
         game.parameters = game.user_interface.parameters
+        subjects_manager.update_subjects(game.parameters)
         game.world.space.debug_draw(game.world.draw_options)
+        clock.tick()
         pygame.display.update()
         game.world.space.step(0.001)
 
