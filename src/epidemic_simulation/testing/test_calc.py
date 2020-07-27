@@ -1,5 +1,5 @@
 from random import randint
-from simulation_manager import SimulationManager
+from src.epidemic_simulation.simulation.simulation_manager import SimulationManager
 
 
 states = ["SUSCEPTIBLE", "INFECTIOUS", "REMOVED"]

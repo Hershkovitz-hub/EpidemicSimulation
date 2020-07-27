@@ -42,10 +42,12 @@ class SimulationManager:
         :param infected_body: [description]
         :type infected_body: dict
         """
-        # infectious_x, infectious_y = self.extract_position(infected_body)
-        # susceptible_x, susceptible_y = self.extract_position(susceptible_body)
         infectious_x, infectious_y = susceptible_body.position
         susceptible_x, susceptible_y = infected_body.position
+        if infectious_x==susceptible_x and infectious_y==susceptible_y:
+            raise ValueError('Both bodies are in the same position')
+        if self.infection_r<=0:
+            raise ValueError('The Radius must be grater than 0')
         if (infectious_x - susceptible_x) * (infectious_x - susceptible_x) + (
             infectious_y - susceptible_y
         ) * (infectious_y - susceptible_y) <= self.infection_r ** 2:
@@ -54,6 +56,8 @@ class SimulationManager:
             return False
 
     def is_infected(self):
+        if self.infection_prob<0 or self.infection_prob>1:
+            raise ValueError('Infection probability must be a number between o and 1')
         return random.choices(
             [False, True],
             weights=[1 - self.infection_prob, self.infection_prob],
@@ -64,8 +68,10 @@ class SimulationManager:
         self.suscpetible_bodies = self.find_bodies("susceptible")
         self.infected_bodies = self.find_bodies("infectious")
         for susceptible_body in self.suscpetible_bodies:
+            # print(susceptible_body)
             for infected_body in self.infected_bodies:
                 proximate = self.is_inside(susceptible_body, infected_body)
+                # print(proximate)
                 if proximate:
                     to_infect = self.is_infected()
                     if to_infect:
@@ -81,7 +87,7 @@ class SimulationManager:
     def remove_infected(self):
         for infected_body in self.infected_bodies:
             for body in self.bodies:
-                if body is infected_body:
+                if body == infected_body:
                     body["counter"] += 1
                     if body["counter"] > self.sickness_duration:
                         body["state"] = "REMOVED"
