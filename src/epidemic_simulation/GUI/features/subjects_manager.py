@@ -127,5 +127,3 @@ class SubjectManager:
             for subject_dict in self.subjects:
                 if body == subject_dict.get("body"):
                     subject_dict["position"] = body._get_position()
-                if subject_dict.get("state").lower() == "infectious":
-                    subject_dict["counter"] = pygame.time.get_ticks()

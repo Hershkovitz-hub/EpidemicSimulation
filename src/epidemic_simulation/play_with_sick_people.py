@@ -18,6 +18,7 @@ class Game:
         self.world = World()
         self.running = True
         self.parameters = {}
+        self.subjects = []
 
     def update_game_windows(self):
         """
@@ -42,6 +43,7 @@ if __name__ == "__main__":
         game.world, game.user_interface.parameters
     )
     subjects_manager.initiate_subjects()
+    game.subjects = subjects_manager.subjects
     clock = pygame.time.Clock()
     while game.running:
         for event in pygame.event.get():
@@ -59,6 +61,7 @@ if __name__ == "__main__":
         subjects_manager.restart_visualisation()
         game.parameters = game.user_interface.parameters
         subjects_manager.update_subjects(game.parameters)
+        game.subjects = subjects_manager.subjects
         game.world.space.debug_draw(game.world.draw_options)
         clock.tick()
         pygame.display.update()
