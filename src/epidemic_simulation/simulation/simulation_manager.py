@@ -1,11 +1,11 @@
 import random
-from epidemic_simulation.GUI.features.utils import SIR
+#from epidemic_simulation.GUI.features.utils import SIR
 
 
 class SimulationManager:
     def __init__(
         self,
-        space,
+        #space,
         bodies: list,
         infection_r: float,
         infection_prob: float,
@@ -22,7 +22,7 @@ class SimulationManager:
         :param day: [description]
         :type day: int
         """
-        self.space = space
+        #self.space = space
         self.bodies = bodies
         self.infection_r = infection_r
         self.infection_prob = infection_prob
@@ -64,10 +64,8 @@ class SimulationManager:
         self.suscpetible_bodies = self.find_bodies("susceptible")
         self.infected_bodies = self.find_bodies("infectious")
         for susceptible_body in self.suscpetible_bodies:
-            # print(susceptible_body)
             for infected_body in self.infected_bodies:
                 proximate = self.is_inside(susceptible_body, infected_body)
-                # print(proximate)
                 if proximate:
                     to_infect = self.is_infected()
                     if to_infect:
