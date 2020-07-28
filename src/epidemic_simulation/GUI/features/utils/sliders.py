@@ -21,7 +21,7 @@ class Sliders(Enum):
     infection_r = {
         "title": "Infection Radius",
         "values_range": (0, 20),
-        "initial_value": 5,
+        "initial_value": 4,
         "type": float,
     }
     initial_carriers_p = {
@@ -33,7 +33,7 @@ class Sliders(Enum):
     sickness_duration = {
         "title": "Sickness Duration",
         "values_range": (1, 1000),
-        "initial_value": 10,
+        "initial_value": 15,
         "type": int,
     }
 

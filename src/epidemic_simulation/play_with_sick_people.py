@@ -71,8 +71,7 @@ if __name__ == "__main__":
         game.parameters = game.user_interface.parameters
 
         subjects_manager.update_subjects(game.parameters)
-        if not pygame.time.get_ticks() % 600:
-            subjects_manager.integrate_with_simulation()
+        subjects_manager.integrate_with_simulation()
         game.subjects = subjects_manager.subjects
         game.world.space.debug_draw(game.world.draw_options)
         clock.tick()
