@@ -81,7 +81,9 @@ and simply type:
 python play_with_sick_people.py
 ```
 
-## Tests (Optional)
+## Tests
+
+> All simulation-related calculations are tested and stable. GUI-related features, however, still need work.
 
 ## Contributing
 
