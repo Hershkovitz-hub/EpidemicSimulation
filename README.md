@@ -78,7 +78,7 @@ cd EpidemicSimulation
 and simply type:
 
 ```
-python initiate_game.py
+python play_with_sick_people.py
 ```
 
 ## Tests (Optional)
