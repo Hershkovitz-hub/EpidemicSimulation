@@ -17,7 +17,7 @@ class SimulationManager:
         self.infection_r = parameters.get("infection_r")
         self.infection_p = parameters.get("infection_p")
         self.subjects_to_change = []
-        self.sickness_duration = parameters.get("sickness_duration")
+        self.sickness_duration = parameters.get("sickness_duration")*75
         
     def sort_subjects_into_groups(self):
         self.infectious = [
@@ -61,7 +61,7 @@ class SimulationManager:
             return False
 
     def is_infected(self) -> bool:
-        if self.infection_prob<0 or self.infection_prob>1:
+        if self.infection_p<0 or self.infection_p>1:
             raise ValueError('Infection probability must be a number between o and 1')
         return random.choices(
             [False, True],

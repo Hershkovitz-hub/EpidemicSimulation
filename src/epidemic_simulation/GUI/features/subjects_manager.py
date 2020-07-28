@@ -57,7 +57,7 @@ class SubjectManager:
         self.subjects = []
         for subject in range(self.subjects_n):
             position = Vec2d(
-                randint(int((self.width / 2) * 1.2), int(self.width - 20)),
+                randint(int(self.width / 2) + 20, int(self.width - 20)),
                 randint(20, int(self.height - 20)),
             )
             counter = 0

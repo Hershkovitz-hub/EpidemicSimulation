@@ -8,9 +8,9 @@
 
 [![Build Status](http://img.shields.io/travis/badges/badgerbadgerbadger.svg?style=flat-square)](https://travis-ci.org/badges/badgerbadgerbadger) [![Coverage Status](http://img.shields.io/coveralls/badges/badgerbadgerbadger.svg?style=flat-square)](https://coveralls.io/r/badges/badgerbadgerbadger) [![Code Climate](http://img.shields.io/codeclimate/github/badges/badgerbadgerbadger.svg?style=flat-square)](https://codeclimate.com/github/badges/badgerbadgerbadger) [![Github Issues](http://githubbadges.herokuapp.com/badges/badgerbadgerbadger/issues.svg?style=flat-square)](https://github.com/badges/badgerbadgerbadger/issues) [![Pending Pull-Requests](http://githubbadges.herokuapp.com/badges/badgerbadgerbadger/pulls.svg?style=flat-square)](https://github.com/badges/badgerbadgerbadger/pulls) [![Gem Version](http://img.shields.io/gem/v/badgerbadgerbadger.svg?style=flat-square)](https://rubygems.org/gems/badgerbadgerbadger) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org) [![Badges](http://img.shields.io/:badges-9/9-ff6799.svg?style=flat-square)](https://github.com/badges/badgerbadgerbadger)
 
-**Initial GUI**
+**GUI**
 
-![initial GUI](supp/images/2020-07-24-11-40-33.gif)
+![GUI](supp/images/GUI_example.gif)
 
 ---
 
@@ -51,6 +51,21 @@ pip install -e .
 ```
 
 ## Features
+
+![features](supp/images/features_example.png)
+The simulation offers 3 main features/windows:
+
+- User interface window (top left, red), where users can define simulation's parameters, such as:
+  - Number of people to simulate.
+  - Probability of infection upon being close to an infectious subject
+  - Infectious radius, which determines how far can an infectious subject infect susceptible ones.
+  - Proportion of initial carriers (in relevance to number of simulated subjects)
+  - Sickness duration, i.e how long does a subject remain infectious before his status is changed to "removed"
+- Parameter presentation window (bottom left, blue), which presents user's selections, and in addition subject's population in the manner of it's division into the three SIR group: Susceptible, Infectios and Removed.
+- Simulation's visualisation window (right, blue), which offers a visualisation of the current simulation, where:
+  - Green subjects are susceptible
+  - Red subjects are infectious
+  - Blue subjects are Removed
 
 ## Usage
 
@@ -95,10 +110,10 @@ python initiate_game.py
 
 > Or Contributors/People
 
-|                                       <a href="https://github.com/Hershkovitz-hub" target="_blank">**Gal Hershkovitz**</a>                                       |                 <a href="https://github.com/nogayair" target="_blank">**Noga Yair**</a>                  |                  <a href="https://github.com/Tal-Camchy" target="_blank">**Tal Camchy**</a>                  |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
-| [![Gal Hershkovitz](https://avatars0.githubusercontent.com/u/52285382?s=460&u=de3ddd2cbb62de1e303d6c2562fec30180e8ca12&v=4)](https://github.com/Hershkovitz-hub) | [![Noga Yair](https://avatars0.githubusercontent.com/u/61880608?s=400&v=4)](https://github.com/nogayair) | [![Tal Canmchy](https://avatars1.githubusercontent.com/u/61880608?s=460&v=4)](https://github.com/Tal-Camchy) |
-|                              <a href="https://github.com/Hershkovitz-hub" target="_blank">`https://github.com/Hershkovitz-hub`</a>                               |         <a href="https://github.com/nogayair" target="_blank">`https://github.com/nogayair`</a>          |         <a href="https://github.com/Tal-Camchy" target="_blank">`https://github.com/Tal-Camchy`</a>          |
+|                                       <a href="https://github.com/Hershkovitz-hub" target="_blank">**Gal Hershkovitz**</a>                                       |         <a href="https://github.com/nogayair" target="_blank">**Noga Yair**</a>         |         <a href="https://github.com/Tal-Camchy" target="_blank">**Tal Camchy**</a>          |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: |
+| [![Gal Hershkovitz](https://avatars0.githubusercontent.com/u/52285382?s=460&u=de3ddd2cbb62de1e303d6c2562fec30180e8ca12&v=4)](https://github.com/Hershkovitz-hub) |           [![Noga Yair](supp/images/noga.jpeg)](https://github.com/nogayair)            |            [![Tal Canmchy](supp/images/tal.jpeg)](https://github.com/Tal-Camchy)            |
+|                              <a href="https://github.com/Hershkovitz-hub" target="_blank">`https://github.com/Hershkovitz-hub`</a>                               | <a href="https://github.com/nogayair" target="_blank">`https://github.com/nogayair`</a> | <a href="https://github.com/Tal-Camchy" target="_blank">`https://github.com/Tal-Camchy`</a> |
 
 ## Support
 
