@@ -146,6 +146,9 @@ class SubjectManager:
                     subject_dict["position"] = body._get_position()
 
     def integrate_with_simulation(self):
+        """
+        Uses SimulationManager to integrate and update subjects with simulation's current parameters
+        """
         simulation_io = SimulationManager(self.subjects, self.parameters)
         self.subjects = simulation_io.update_subjects()
         self.clear_all_subjects()

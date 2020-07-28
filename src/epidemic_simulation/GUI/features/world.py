@@ -8,6 +8,13 @@ BACKGROUND_COLOR = (0, 0, 0)
 
 class World:
     def __init__(self, size_x: int = 1280, size_y: int = 720):
+        """
+        A class aimed at initiating the world (i.e screen) where the simulation takes place.
+        :param size_x: [Screen's width], defaults to 1280
+        :type size_x: int, optional
+        :param size_y: [Screen's height], defaults to 720
+        :type size_y: int, optional
+        """
         pygame.init()
         self.space = pymunk.Space()
         self.space.gravity = 0, 0

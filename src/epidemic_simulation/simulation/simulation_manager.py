@@ -1,4 +1,6 @@
 import random
+
+
 class SimulationManager:
     def __init__(self, subjects: list, parameters: dict):
         """
@@ -17,9 +19,12 @@ class SimulationManager:
         self.infection_r = parameters.get("infection_r")
         self.infection_p = parameters.get("infection_p")
         self.subjects_to_change = []
-        self.sickness_duration = parameters.get("sickness_duration")*75
-        
+        self.sickness_duration = parameters.get("sickness_duration") * 75
+
     def sort_subjects_into_groups(self):
+        """
+        Divides subjects into SIR (susceptible, infectious, removed) groups
+        """
         self.infectious = [
             subject
             for subject in self.subjects
@@ -41,17 +46,21 @@ class SimulationManager:
     ) -> bool:
         """
         Method to determine whether susceptible subjects are in close proximity to infectious ones
-        :param suscptible_body: [description]
-        :type suscptible_body: dict
-        :param infected_body: [description]
-        :type infected_body: dict
+        :param suscptible_subject: [A dictionary containing susceptible subject's parameters]
+        :type suscptible_subject: dict
+        :param infected_subject: [A dictionary containing infectious subject's parameters]
+        :type infected_subject: dict
+        :raises ValueError: [Upon two subjects located at the same coordinated]
+        :raises ValueError: [Upon world's infectious radius parameter being negative]
+        :return: [whether subjects are in proximity to one another]
+        :rtype: bool
         """
         infectious_x, infectious_y = susceptible_subject.get("position")
-        susceptible_x, susceptible_y = infected_subject.get("position")      
-        if infectious_x==susceptible_x and infectious_y==susceptible_y:
-            raise ValueError('Both bodies are in the same position')
-        if self.infection_r<=0:
-            raise ValueError('The Radius must be grater than 0')
+        susceptible_x, susceptible_y = infected_subject.get("position")
+        if infectious_x == susceptible_x and infectious_y == susceptible_y:
+            raise ValueError("Both bodies are in the same position")
+        if self.infection_r <= 0:
+            raise ValueError("The Radius must be grater than 0")
         x_distance = (infectious_x - susceptible_x) ** 2
         y_distance = (infectious_y - susceptible_y) ** 2
         distance = (y_distance + x_distance) ** 0.5
@@ -61,8 +70,16 @@ class SimulationManager:
             return False
 
     def is_infected(self) -> bool:
-        if self.infection_p<0 or self.infection_p>1:
-            raise ValueError('Infection probability must be a number between o and 1')
+        """
+
+        :raises ValueError: [Upon world's infection probability parameter being negative]
+        :return: [wheter the subject is to be infected]
+        :rtype: bool
+        """
+        if self.infection_p < 0 or self.infection_p > 1:
+            raise ValueError(
+                "Infection probability must be a number between o and 1"
+            )
         return random.choices(
             [False, True],
             weights=[1 - self.infection_p, self.infection_p],
@@ -70,6 +87,9 @@ class SimulationManager:
         )[0]
 
     def calculate_subjects_to_change(self):
+        """
+        Use world's and subjects' parameter to determine which of the current subjects is to be infected
+        """
         for susceptible_subject in self.susceptibles:
             for infected_subject in self.infectious:
                 proximate = self.is_inside(
@@ -82,12 +102,18 @@ class SimulationManager:
                         break
 
     def infect_susceptibles(self):
+        """
+        Change subjects' state from "susceptible" to "infectious"
+        """
         for susceptible_subject in self.subjects_to_change:
             for subject in self.subjects:
                 if subject is susceptible_subject:
                     subject["state"] = "INFECTIOUS"
 
     def remove_infected(self):
+        """
+        Change subjects' state from "infectious" to "removed"
+        """
         for infected_subject in self.infectious:
             for subject in self.subjects:
                 if subject == infected_subject:
@@ -95,7 +121,12 @@ class SimulationManager:
                     if subject["counter"] > self.sickness_duration:
                         subject["state"] = "REMOVED"
 
-    def update_subjects(self):
+    def update_subjects(self) -> list:
+        """
+        Uses class's methods to update subjects' states
+        :return: [Updated subjects list]
+        :rtype: [list]
+        """
         self.calculate_subjects_to_change()
         self.remove_infected()
         self.infect_susceptibles()
